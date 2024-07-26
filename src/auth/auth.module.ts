@@ -12,8 +12,8 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       global: true,
-      secret: 'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
-      signOptions: {expiresIn: '60s'}
+      secret: process.env.JWT_SECRET,
+      signOptions: {expiresIn: process.env.JWT_EXPIRE}
     }),
     ConfigModule
   ],

@@ -11,7 +11,7 @@ export class UserController {
     getAllUser():Promise<User[]>{
         return this.userService.findAllUser()
     }
-
+    
     @Get(':id')
     getUserById(@Param('id') id: string):Promise<User>{
         console.log(id)
