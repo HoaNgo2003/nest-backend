@@ -29,5 +29,4 @@ export class UserService {
             throw new HttpException('User not found', HttpStatus.BAD_REQUEST)
         }
     }
-
 }
