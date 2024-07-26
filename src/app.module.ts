@@ -6,6 +6,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { VideoModule } from './video/video.module';
+import { Video } from './video/entity/video.entity';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/entity/category.entity';
 
 @Module({
   imports: [
@@ -19,9 +23,11 @@ import { AuthModule } from './auth/auth.module';
       url: process.env.MONGO_URL,
       synchronize: true,
       logging: true,
-      entities: [User]
+      entities: [User, Video, Category]
     }),
-    AuthModule
+    AuthModule,
+    VideoModule,
+    CategoryModule
     ],
   controllers: [AppController],
   providers: [AppService],

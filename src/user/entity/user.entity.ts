@@ -17,12 +17,8 @@ export class User {
   @Column()
   token: string;
 
-  @Column()
-  refresh_token: string;
-
   @CreateDateColumn()
   created_at: Date;
 
-  @CreateDateColumn()
-  updated_at: Date;
+   
 }

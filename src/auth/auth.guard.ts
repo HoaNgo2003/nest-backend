@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
@@ -22,12 +22,17 @@ export class AuthGuard implements CanActivate{
             )
             request['user'] = payload;
         } catch (error) {
-            throw new UnauthorizedException();
+            throw new HttpException({
+                status: 419,
+                message:"Token invalid"
+            }, 419)
         }
         return true
     }
     private extracTokenFromHeader(request: Request):string|undefined{
+        console.log(request.body)
         const [type, token] = request.headers.authorization?.split(' ')??[];
+        console.log(request.headers.authorization)
         return type === 'Bearer' ? token : undefined;
     }
 

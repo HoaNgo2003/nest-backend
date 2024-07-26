@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
-import { UserRegisterDto } from './dto/user.create.dto';
+import { UserRegisterDto } from './dto/user.register.dto';
 import * as bcrypt from "bcrypt"
 import { LoginUserDto } from './dto/user.login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -25,7 +25,7 @@ export class AuthService {
     if(user){
       throw new HttpException("Email da ton tai", HttpStatus.BAD_REQUEST);
     }
-    return await this.userRespository.save({...registerDto, password: hashPass, refresh_token: "refresh_token"
+    return await this.userRespository.save({...registerDto, password: hashPass 
     });
   }
   async loginUser(loginUser: LoginUserDto): Promise<any>{
@@ -46,30 +46,7 @@ export class AuthService {
   }
   async generateToken(payload:{email: string, username: string}){
     const access_token = await this.jwtService.signAsync(payload);
-    const refresh_token = await this.jwtService.signAsync(payload,{
-      secret: this.configService.get<string>('JWT_SECRET'),
-      expiresIn:'1d'
-    })
-    await this.userRespository.update(
-      {email: payload.email},
-      {refresh_token: refresh_token}
-    )
-    return {access_token, refresh_token}
+    return {access_token}
   }
-  async refreshToken(refreshToken: string): Promise<any>{
-    try {
-      const verifyData = await this.jwtService.verifyAsync(refreshToken,{
-        secret: this.configService.get<string>("JWT_SECRET")
-      })
-      const checkToKenExit = await this.userRespository.findOneBy({email:verifyData.email, refresh_token: refreshToken})
-      if(checkToKenExit){
-        return this.generateToken({email: verifyData.email, username: verifyData.username})
-      }
-      else{
-        throw new HttpException('Refresh token invalid', HttpStatus.BAD_REQUEST);
-      }
-    } catch (error) {
-      throw new HttpException('Refresh token invalid', HttpStatus.BAD_REQUEST);
-    }
-  }
+  
 }
