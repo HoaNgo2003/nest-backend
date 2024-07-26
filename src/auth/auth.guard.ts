@@ -20,8 +20,10 @@ export class AuthGuard implements CanActivate{
                     secret: this.configService.get<string>("JWT_SECRET")
                 }
             )
+            
             request['user'] = payload;
         } catch (error) {
+            console.log(error)
             throw new HttpException({
                 status: 419,
                 message:"Token invalid"
@@ -32,7 +34,6 @@ export class AuthGuard implements CanActivate{
     private extracTokenFromHeader(request: Request):string|undefined{
         console.log(request.body)
         const [type, token] = request.headers.authorization?.split(' ')??[];
-        console.log(request.headers.authorization)
         return type === 'Bearer' ? token : undefined;
     }
 
